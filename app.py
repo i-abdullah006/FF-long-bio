@@ -1,12 +1,34 @@
 from flask import Flask, render_template, request, jsonify
 import requests
-from urllib.parse import quote
+from urllib.parse import quote, urlparse, parse_qs
 
 app = Flask(__name__)
 
-# Apni API key yahan lagao
 API_KEY = "paglu_dev"
 API_BASE_URL = "https://bio.ffutils.tech/api/update_bio"
+
+
+def extract_access_token(raw):
+    if not raw:
+        return None
+
+    raw = raw.strip()
+
+    if raw.startswith("http://") or raw.startswith("https://"):
+        try:
+            parsed = urlparse(raw)
+            params = parse_qs(parsed.query)
+
+            if "eat" in params:
+                return params["eat"][0]
+
+            if "access_token" in params:
+                return params["access_token"][0]
+
+        except Exception:
+            pass
+
+    return raw
 
 
 @app.route("/")
@@ -34,6 +56,8 @@ def update_bio():
                 "message": "Bio is required."
             }), 400
 
+        token = extract_access_token(token)
+
         url = (
             f"{API_BASE_URL}"
             f"?access_token={token}"
@@ -41,7 +65,7 @@ def update_bio():
             f"&key={API_KEY}"
         )
 
-        response = requests.get(url, timeout=15)
+        response = requests.get(url, timeout=20)
         result = response.json()
 
         if result.get("status") == "success":
@@ -66,4 +90,4 @@ def update_bio():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(debug=True)
