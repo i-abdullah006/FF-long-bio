@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+/* ==========================================================================
+   Free Fire Bio Updater — stylesheet
+   ========================================================================== */
+
+:root {
+  --bg: #111111;
+  --card: #1a1a1a;
+  --accent: #ffb800;
+  --accent-hover: #ff9500;
+  --text: #ffffff;
+  --text-secondary: #b3b3b3;
+  --border: #2c2c2c;
+  --success: #22c55e;
+  --error: #ef4444;
+
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-card: 20px;
+  --radius-field: 10px;
+  --radius-btn: 10px;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Ambient background
+   ========================================================================== */
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 184, 0, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 184, 0, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, #000 0%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(110px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.bg-glow--one {
+  width: 520px;
+  height: 520px;
+  top: -160px;
+  left: -120px;
+  background: radial-gradient(circle, rgba(255, 184, 0, 0.35) 0%, transparent 70%);
+}
+
+.bg-glow--two {
+  width: 460px;
+  height: 460px;
+  bottom: -180px;
+  right: -120px;
+  background: radial-gradient(circle, rgba(255, 149, 0, 0.25) 0%, transparent 70%);
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+/* ==========================================================================
+   Card
+   ========================================================================== */
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  background: linear-gradient(180deg, rgba(26, 26, 26, 0.88) 0%, rgba(20, 20, 20, 0.92) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 40px 32px 28px;
+  box-shadow:
+    0 24px 60px -16px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  animation: card-in 0.6s var(--ease) both;
+  transition: box-shadow 0.4s var(--ease), transform 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 184, 0, 0.28);
+  box-shadow:
+    0 28px 70px -16px rgba(0, 0, 0, 0.7),
+    0 0 40px -8px rgba(255, 184, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* HUD corner brackets — signature detail, evokes a tactical loadout screen */
+.hud-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--accent);
+  opacity: 0.55;
+  transition: opacity 0.4s var(--ease);
+}
+
+.card:hover .hud-corner {
+  opacity: 0.9;
+}
+
+.hud-corner--tl {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 6px;
+}
+
+.hud-corner--tr {
+  top: -1px;
+  right: -1px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 6px;
+}
+
+.hud-corner--bl {
+  bottom: -1px;
+  left: -1px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 6px;
+}
+
+.hud-corner--br {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 6px;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.card-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 14px;
+}
+
+.brand-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: 1.5px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 184, 0, 0.25);
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  letter-spacing: 0.2px;
+}
+
+/* ==========================================================================
+   Form fields
+   ========================================================================== */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field > label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+input[type='text'],
+textarea {
+  width: 100%;
+  background: #141414;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-field);
+  padding: 13px 14px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s var(--ease);
+}
+
+textarea {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+input[type='text']::placeholder,
+textarea::placeholder {
+  color: #6b6b6b;
+}
+
+input[type='text']:hover,
+textarea:hover {
+  border-color: #3a3a3a;
+}
+
+input[type='text']:focus,
+textarea:focus {
+  border-color: var(--accent);
+  background: #161616;
+  box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.14), 0 0 18px rgba(255, 184, 0, 0.18);
+}
+
+.field-error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--error);
+}
+
+/* Checkbox */
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-field input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-box {
+  flex-shrink: 0;
+  width: 19px;
+  height: 19px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: #141414;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.checkbox-box svg {
+  width: 11px;
+  height: 11px;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.15s var(--ease), transform 0.15s var(--ease);
+}
+
+.checkbox-field input[type='checkbox']:checked + .checkbox-box {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 14px rgba(255, 184, 0, 0.35);
+}
+
+.checkbox-field input[type='checkbox']:checked + .checkbox-box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.checkbox-field input[type='checkbox']:focus-visible + .checkbox-box {
+  box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.25);
+}
+
+.checkbox-label {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 1.2px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), box-shadow 0.25s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #111111;
+  box-shadow: 0 8px 24px -8px rgba(255, 184, 0, 0.5);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -8px rgba(255, 149, 0, 0.6), 0 0 24px rgba(255, 184, 0, 0.25);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid rgba(255, 184, 0, 0.55);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 184, 0, 0.08);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -10px rgba(255, 184, 0, 0.35);
+}
+
+.btn-spinner {
+  display: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(17, 17, 17, 0.35);
+  border-top-color: #111111;
+  border-radius: 50%;
+}
+
+.btn-primary.is-loading .btn-spinner {
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+
+.btn-primary.is-loading .btn-label {
+  opacity: 0.85;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   Result card
+   ========================================================================== */
+
+.result {
+  margin-top: 22px;
+  padding: 18px 18px;
+  border-radius: 14px;
+  background: #151515;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--text-secondary);
+  animation: result-in 0.45s var(--ease) both;
+}
+
+.result.is-success {
+  border-left-color: var(--success);
+  box-shadow: 0 0 24px -8px rgba(34, 197, 94, 0.25);
+}
+
+.result.is-error {
+  border-left-color: var(--error);
+  box-shadow: 0 0 24px -8px rgba(239, 68, 68, 0.25);
+}
+
+@keyframes result-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.result.is-success .result-status {
+  color: var(--success);
+}
+
+.result.is-error .result-status {
+  color: var(--error);
+}
+
+.result-status .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.result-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.result-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.result-row .key {
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.result-row .value {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.result-message {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.card-footer {
+  margin-top: 26px;
+  text-align: center;
+}
+
+.card-footer p {
+  margin: 0;
+  font-size: 11.5px;
+  letter-spacing: 0.4px;
+  color: #6b6b6b;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 420px) {
+  .card {
+    padding: 32px 22px 24px;
+    border-radius: 16px;
+  }
+
+  .title {
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+
+  .bg-glow--one,
+  .bg-glow--two {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+@media (min-width: 700px) {
+  .bg-glow--one,
+  .bg-glow--two {
+    opacity: 0.6;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .result,
+  .btn,
+  .hud-corner,
+  .checkbox-box svg {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .card:hover,
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+}
+</style>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Free Fire Bio Updater</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ambient background layers -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--one" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--two" aria-hidden="true"></div>
+
+  <main class="page">
+    <section class="card" id="card">
+
+      <span class="hud-corner hud-corner--tl" aria-hidden="true"></span>
+      <span class="hud-corner hud-corner--tr" aria-hidden="true"></span>
+      <span class="hud-corner hud-corner--bl" aria-hidden="true"></span>
+      <span class="hud-corner hud-corner--br" aria-hidden="true"></span>
+
+      <header class="card-header">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 4 L41 13 V31 C41 39 33 43 24 45 C15 43 7 39 7 31 V13 Z" stroke="url(#gold)" stroke-width="2.5" fill="rgba(255,184,0,0.06)"/>
+            <path d="M24 13 L24 30 M16 21 L32 21" stroke="url(#gold)" stroke-width="2.5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="gold" x1="7" y1="4" x2="41" y2="45" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ffb800"/>
+                <stop offset="1" stop-color="#ff9500"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h1 class="title">FREE FIRE BIO UPDATER</h1>
+        <p class="subtitle">Update your profile bio instantly.</p>
+      </header>
+
+      <form class="form" id="bioForm" novalidate>
+
+        <div class="field">
+          <label for="accessToken">Access Token</label>
+          <input
+            type="text"
+            id="accessToken"
+            name="accessToken"
+            placeholder="Paste your access token here"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <p class="field-error" id="tokenError" hidden>Access token is required.</p>
+        </div>
+
+        <label class="checkbox-field" for="rememberToken">
+          <input type="checkbox" id="rememberToken" name="rememberToken" />
+          <span class="checkbox-box" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 8.5L6.2 11.5L13 4.5" stroke="#111111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="checkbox-label">Remember my token on this device</span>
+        </label>
+
+        <div class="field">
+          <label for="bio">New Bio</label>
+          <textarea
+            id="bio"
+            name="bio"
+            placeholder="Enter your new bio..."
+            spellcheck="false"
+          ></textarea>
+          <p class="field-error" id="bioError" hidden>Write a bio before updating.</p>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <span class="btn-spinner" aria-hidden="true"></span>
+            <span class="btn-label">UPDATE BIO</span>
+          </button>
+
+          <a
+            class="btn btn-secondary"
+            href="https://ticket.kiosgamer.co.id/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GET ACCESS TOKEN
+          </a>
+        </div>
+      </form>
+
+      <div class="result" id="result" hidden aria-live="polite"></div>
+
+      <footer class="card-footer">
+        <p>Powered by B么DSH么H〆FF࿐</p>
+        <p> Created By MUHAMMAD ABDULLAH</p>
+      </footer>
+
+    </section>
+  </main>
+
+  <script>
+  /* ==========================================================================
+   Free Fire Bio Updater — app logic
+   ========================================================================== */
+
+(function () {
+  'use strict';
+
+  // Point this at your Flask backend route, e.g. '/api/update-bio'.
+  // Expected JSON response shapes:
+  //   success: { success: true, player_name, uid, region, bio }
+  //   error:   { success: false, message }
+  const API_ENDPOINT = '/api/update-bio';
+
+  const STORAGE_KEY = 'ff_access_token';
+
+  const form = document.getElementById('bioForm');
+  const tokenInput = document.getElementById('accessToken');
+  const rememberCheckbox = document.getElementById('rememberToken');
+  const bioInput = document.getElementById('bio');
+  const submitBtn = document.getElementById('submitBtn');
+  const tokenError = document.getElementById('tokenError');
+  const bioError = document.getElementById('bioError');
+  const resultEl = document.getElementById('result');
+
+  /* ---- restore saved token on load ---- */
+  function restoreToken() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      tokenInput.value = saved;
+      rememberCheckbox.checked = true;
+    }
+  }
+
+  /* ---- clear field-level errors as the user types ---- */
+  function clearFieldError(input, errorEl) {
+    input.addEventListener('input', () => {
+      errorEl.hidden = true;
+      input.style.borderColor = '';
+    });
+  }
+
+  function showFieldError(input, errorEl) {
+    errorEl.hidden = false;
+    input.style.borderColor = 'var(--error)';
+  }
+
+  /* ---- loading state on the primary button ---- */
+  function setLoading(isLoading) {
+    submitBtn.disabled = isLoading;
+    submitBtn.classList.toggle('is-loading', isLoading);
+  }
+
+  /* ---- render the result card ---- */
+  function renderResult(html, status) {
+    resultEl.innerHTML = html;
+    resultEl.hidden = false;
+    resultEl.classList.remove('is-success', 'is-error');
+    resultEl.classList.add(status === 'success' ? 'is-success' : 'is-error');
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : String(str);
+    return div.innerHTML;
+  }
+
+  function renderSuccess(data) {
+    const playerName = data.player_name || data.playerName || '—';
+    const uid = data.uid || '—';
+    const region = data.region || '—';
+    const bio = data.bio || bioInput.value;
+
+    renderResult(
+      `
+      <div class="result-status"><span class="dot"></span> Bio updated</div>
+      <div class="result-grid">
+        <div class="result-row">
+          <span class="key">Player Name</span>
+          <span class="value">${escapeHtml(playerName)}</span>
+        </div>
+        <div class="result-row">
+          <span class="key">UID</span>
+          <span class="value">${escapeHtml(uid)}</span>
+        </div>
+        <div class="result-row">
+          <span class="key">Region</span>
+          <span class="value">${escapeHtml(region)}</span>
+        </div>
+        <div class="result-row">
+          <span class="key">Updated Bio</span>
+          <span class="value">${escapeHtml(bio)}</span>
+        </div>
+      </div>
+      `,
+      'success'
+    );
+  }
+
+  function renderError(message) {
+    renderResult(
+      `
+      <div class="result-status"><span class="dot"></span> Update failed</div>
+      <p class="result-message">${escapeHtml(message)}</p>
+      `,
+      'error'
+    );
+  }
+
+  /* ---- form submit ---- */
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const token = tokenInput.value.trim();
+    const bio = bioInput.value.trim();
+
+    let hasError = false;
+    if (!token) {
+      showFieldError(tokenInput, tokenError);
+      hasError = true;
+    }
+    if (!bio) {
+      showFieldError(bioInput, bioError);
+      hasError = true;
+    }
+    if (hasError) return;
+
+    // remember / forget token on this device
+    if (rememberCheckbox.checked) {
+      localStorage.setItem(STORAGE_KEY, token);
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    setLoading(true);
+    resultEl.hidden = true;
+
+    try {
+      const res = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ access_token: token, bio: bio })
+      });
+
+      let data = {};
+      try {
+        data = await res.json();
+      } catch (_) {
+        // non-JSON response, fall through to generic error below
+      }
+
+      if (res.ok && data && data.success) {
+        renderSuccess(data);
+      } else {
+        renderError(
+          (data && (data.message || data.error)) ||
+            'Could not update the bio. Check your access token and try again.'
+        );
+      }
+    } catch (err) {
+      renderError("Couldn't reach the server. Check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /* ---- init ---- */
+  restoreToken();
+  clearFieldError(tokenInput, tokenError);
+  clearFieldError(bioInput, bioError);
+  form.addEventListener('submit', handleSubmit);
+})();
+  </script>
+</body>
+</html>
